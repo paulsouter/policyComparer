@@ -1,0 +1,78 @@
+@startuml
+
+' style tweaks to make the diagram a little more readable
+skinparam {
+	Style strictuml
+	RoundCorner 8
+
+	Sequence {
+		' make activations yellow too
+		LifeLineBackgroundColor #FDFDCD
+
+		' make stereotypes less ugly
+		Stereotype {
+			Font {
+				Size 11
+				Style plain
+			}
+		}
+	}
+
+	DatabaseBorderColor #A80036
+
+}
+
+title Add New Product (using DB DAO)
+
+actor customerActor as user
+participant "productsWebPage" as webPage << main >>
+participant "menu links" as menu
+participant "AngularJSProductController" as controller<<dailog>>
+participant "JoobyModule" as module << dialog >>
+participant "ProductDatabaseDAO" as dao << DAO >>
+
+
+
+user++
+create user
+create webPage
+webPage++
+user ->webPage: user clicks on browse Products
+
+create controller
+
+webPage->controller: product page is linked to js files
+webPage->controller: ProductController as prodCtrl
+controller++
+controller--
+create menu
+webPage->menu: ng-include="'menu.html'"
+webPage->controller: prodCtrl.getProducts()
+controller++
+controller->controller:productDAO.query()
+create module
+controller->module:'/api/products/:id'
+
+create dao
+module->dao:dao.getProducts()
+dao++
+dao->dao: prepare sql statemnet
+create productDatabase
+dao->productDatabase: executeQuery()
+productDatabase++
+productDatabase-->dao: list of all products
+productDatabase--
+dao-->module: list of all products
+dao--
+module-->controller:list of all products
+module--
+controller-->webPage:list of all products
+controller--
+webPage->webPage:display all products
+webPage--
+user--
+
+
+
+
+@enduml

@@ -1,0 +1,118 @@
+@startuml
+
+' style tweaks to make the diagram a little more readable
+skinparam {
+	Style strictuml
+	RoundCorner 8
+
+	Sequence {
+		' make activations yellow too
+		LifeLineBackgroundColor #FDFDCD
+
+		' make stereotypes less ugly
+		Stereotype {
+			Font {
+				Size 11
+				Style plain
+			}
+		}
+	}
+
+	DatabaseBorderColor #A80036
+
+}
+
+title search by category (using DB DAO)
+
+actor User as user
+participant "Administration" as main << main >>
+participant "MainMenu" as menu << frame >>
+participant "ViewProducts" as dialog << dialog >>
+participant "DatabaseManager" as dao << DAO >>
+participant "SimpleListModel\n:model" as model
+participant "ValidationHelper" as validation<<helper>>
+participant "Product" as product << domain >>
+database "Database" as db
+
+main++
+create menu
+main -> menu : « construct »
+
+user -> menu : clicks 'View Products'
+menu++
+
+create dialog
+menu -> dialog : « construct »
+dialog++
+
+create dao
+dialog -> dao : « construct »
+
+dialog -> dao++ : getCategories()
+dao -> db++ : select distinct category from product
+return ResultSet
+return categories
+
+dialog -> dao++ : getProducts()
+dao -> db++ : select all products
+return ResultSet
+create product
+dao -> product : <<construct>>
+product++
+
+return product
+return products
+
+create model
+dialog -> model : « construct »
+
+dialog -> model++ : updateItems(categories)
+model--
+dialog -> model++ : updateItems(products)
+model--
+dialog -> dialog : cmbCategory.setModel(model)
+note left : categories now\nin combobox
+dialog -> dialog : produts.setModel(model)
+note left : products now\nin list
+
+
+create validation
+dialog -> validation  : << construct >>
+dialog -> validation++ : addTypeFormatter(searchTxt, "", Integer.class)
+validation--
+
+dialog--
+
+
+
+user -> dialog++ : enters product details into category components
+dialog--
+
+user -> dialog++ : clicks 'search' button
+
+
+
+dialog -> dialog : get details entered\ninto the search components
+
+
+
+dialog -> dao++ : filterSearch(category)
+dao -> dao : copy category \ninto PreparedStatement
+dao -> db++ : select all products with that catogory
+return resultSet
+
+create product
+dao -> product : <<construct>>
+product++
+
+return product
+
+return products
+db--
+dao--
+
+dialog -> dialog : produts.setModel(model)
+note left : products now\nin list
+
+
+@enduml

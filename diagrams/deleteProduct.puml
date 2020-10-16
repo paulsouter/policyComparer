@@ -1,0 +1,118 @@
+@startuml
+
+' style tweaks to make the diagram a little more readable
+skinparam {
+	Style strictuml
+	RoundCorner 8
+
+	Sequence {
+		' make activations yellow too
+		LifeLineBackgroundColor #FDFDCD
+
+		' make stereotypes less ugly
+		Stereotype {
+			Font {
+				Size 11
+				Style plain
+			}
+		}
+	}
+
+	DatabaseBorderColor #A80036
+
+}
+
+title delete product (using DB DAO)
+
+actor User as user
+participant "Administration" as main << main >>
+participant "MainMenu" as menu << frame >>
+participant "ViewProducts" as dialog << dialog >>
+participant "DatabaseManager" as dao << DAO >>
+participant "SimpleListModel\n:model" as model
+participant "ValidationHelper" as validation<<helper>>
+participant "Product\n:product" as product << domain >>
+database "Database" as db
+
+main++
+create menu
+main -> menu : « construct »
+
+user -> menu : clicks 'View Products'
+menu++
+
+create dialog
+menu -> dialog : « construct »
+dialog++
+
+create dao
+dialog -> dao : « construct »
+
+dialog -> dao++ : getCategories()
+dao -> db++ : select distinct category from product
+return ResultSet
+return categories
+
+dialog -> dao++ : getProducts()
+dao -> db++ : select all products
+return ResultSet
+create product
+dao -> product : <<construct>>
+product++
+
+return product
+return products
+
+create model
+dialog -> model : « construct »
+
+dialog -> model++ : updateItems(categories)
+model--
+dialog -> model++ : updateItems(products)
+model--
+dialog -> dialog : cmbCategory.setModel(model)
+note left : categories now\nin combobox
+dialog -> dialog : produts.setModel(model)
+note left : products now\nin list
+
+
+create validation
+dialog -> validation  : << construct >>
+dialog -> validation++ : addTypeFormatter(searchTxt, "", Integer.class)
+validation--
+
+dialog--
+
+
+
+user -> dialog++ : user clicks on a product form the list
+dialog--
+
+user -> dialog++ : clicks 'delete' button
+
+
+
+dialog -> dialog : get product clicked\non
+
+note left : show Confirmmation Dialog\n for deleting the product
+
+dialog -> dao++ : deleteProduct(product)
+dao -> dao : copy ID \ninto PreparedStatement
+dao -> db++ : delete product with that ID
+db--
+dao--
+
+dialog -> dao++ : getProducts()
+dao -> db++ : select all products
+return ResultSet
+create product
+dao -> product : <<construct>>
+product++
+
+return product
+return products
+dialog -> dialog : produts.setModel(model)
+note left : products now\nin list
+
+
+@enduml

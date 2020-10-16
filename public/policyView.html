@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+
+<html ng-app="ShoppingApp">
+    <head>
+        <script src="js/angular.min.js"></script>
+        <script src="js/angular-resource.min.js"></script>
+        <script src="js/ngStorage.min.js"></script>
+        <script src="js/shopping.js"></script>
+        <title>Policy</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="stylesheet" href="css/StyleSheet.css">
+    </head>
+    <body ng-controller="PolicyController as polCtrl" >
+
+        <h1>Policy</h1>
+        <div ng-include="'menu.html'" ></div>
+        <button ng-click="prolCtrl.selectTags(tag)" ng-repeat="tag in polCtrl.tags">{{tag}}</button>
+        <table>
+            <tr>
+                <th>name</th>
+                <th>party</th>
+                <th>policy:</th>
+                <th>tags</th>
+                <th>website</th>
+                <th>date</th>
+                <th></th>
+            </tr>
+            <tbody ng-controller="CartController as cartCtrl">
+                <tr ng-repeat="policy in polCtrl.policies">
+                    <td>{{policy.name}}</td>
+                    <td>{{policy.party}}</td>
+                    <td>{{policy.text}}</td>
+                    <td>{{policy.tags}}</td>
+                    <td>{{policy.website}}</td>
+                    <td>{{policy.date}}</td>
+                    <!--<td><button ng-click="cartCtrl.storeProduct(product)">Buy</button></td>-->
+
+                </tr>
+            </tbody>
+        </table>
+
+    </body>
+</html>

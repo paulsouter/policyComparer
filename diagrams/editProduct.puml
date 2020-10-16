@@ -1,0 +1,155 @@
+@startuml
+
+' style tweaks to make the diagram a little more readable
+skinparam {
+	Style strictuml
+	RoundCorner 8
+
+	Sequence {
+		' make activations yellow too
+		LifeLineBackgroundColor #FDFDCD
+
+		' make stereotypes less ugly
+		Stereotype {
+			Font {
+				Size 11
+				Style plain
+			}
+		}
+	}
+
+	DatabaseBorderColor #A80036
+
+}
+
+title edit product (using DB DAO)
+
+actor User as user
+participant "Administration" as main << main >>
+participant "MainMenu" as menu << frame >>
+participant "ViewProducts" as dialog << dialog >>
+participant "DataEntry" as dialog2 << dialog >>
+participant "DatabaseManager" as dao << DAO >>
+participant "SimpleListModel\n:model" as model
+participant "ValidationHelper" as validation<<helper>>
+participant "Product  " as product << domain >>
+database "Database" as db
+
+main++
+create menu
+main -> menu : « construct »
+
+user -> menu : clicks 'View Products'
+menu++
+
+create dialog
+menu -> dialog : « construct »
+dialog++
+
+create dao
+dialog -> dao : « construct »
+
+dialog -> dao++ : getCategories()
+dao -> db++ : select distinct category from product
+return ResultSet
+return categories
+
+dialog -> dao++ : getProducts()
+dao -> db++ : select all products
+return ResultSet
+create product
+dao -> product : <<construct>>
+product++
+
+return product
+return products
+
+create model
+dialog -> model : « construct »
+
+dialog -> model++ : updateItems(categories)
+model--
+dialog -> model++ : updateItems(products)
+model--
+dialog -> dialog : cmbCategory.setModel(model)
+note left : categories now\nin combobox
+dialog -> dialog : produts.setModel(model)
+note left : products now\nin list
+
+
+create validation
+dialog -> validation : << construct >>
+dialog -> validation++ : addTypeFormatter(searchTxt, "", Integer.class)
+validation--
+
+dialog--
+
+
+
+user -> dialog++ : user clicks on a product form the list
+dialog--
+
+user -> dialog++ : clicks 'edit' button
+
+
+
+dialog -> dialog : get product clicked\non
+
+create dialog2
+dialog ->dialog2 : DataEntry(this, this, product)
+dialog2++
+dialog2 -> dao : « construct »
+
+dialog2 -> dao++ : getCategories()
+dao -> db++ : select distinct category from product
+return ResultSet
+return categories
+dialog2 -> dialog2 : DataEntry(this, model)
+dialog2 -> validation++ : addTypeFormatter(searchTxt, "#0", Integer.class)
+validation--
+dialog2 -> validation++ : addTypeFormatter(txtQuantity, "#0.00", BigDecimal.class)
+validation--
+dialog2 -> validation++ : addTypeFormatter(txtPrice, "#0.00", BigDecimal.class)
+validation--
+
+dialog2 -> dialog2 :txtDescription.setText(product.getDescription());
+dialog2 -> dialog2 :txtID.setValue(product.getProductId());
+dialog2 -> dialog2 :txtName.setText(product.getName());
+dialog2 -> dialog2 :txtCategory.setSelectedItem(product.getCategory());
+dialog2 -> dialog2 :txtPrice.setValue(product.getPricelist());
+dialog2 -> dialog2 :txtQuantity.setValue((product.getQuantityInStock()));
+dialog2 -> dialog2 :txtID.setEditable(false);
+note left : edit dialog now open\nwith the values of the products\n in the components
+dialog2--
+user ->dialog2++ : enter new values for the product
+dialog2--
+user -> dialog2++ : clicks on save button
+
+create product
+dialog2 ->product++ : <<construct>>
+return product
+dialog2 -> validation++ : isObjectValid(product)
+return : if it is valid or not
+dialog2 ->dao++ : addProduct(product)
+dao ->dao : add details into prepared statment
+dao ->db++ : merge product into the database
+db--
+dao--
+dialog2 -> dialog2 : dispose()
+dialog2 -->dialog : returns focus
+destroy dialog2
+
+
+
+
+
+
+dialog -> dao++ : getProducts()
+dao -> db++ : select all products
+return ResultSet
+return products
+dialog -> dialog : produts.setModel(model)
+note left : products now\nin list
+
+
+@enduml
