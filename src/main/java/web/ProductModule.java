@@ -18,19 +18,19 @@ public class ProductModule extends Jooby {
 
     public ProductModule(PolicyDaoInterface dao, PartyDaoInterface partyDao, TagsDaoInterface tagsDao) {
         get("/api/policies", () -> dao.getPolicy());
-        get("/api/policyes/:id", (req) -> {
+        get("/api/policies/:id", (req) -> {
             int id = req.param("id").intValue();
             return dao.searchId(id);
         });
         get("/api/tags", () -> tagsDao.getTags());
-        get("/api/tags/:tag", (req) -> {
-            String input = req.param("tag").value();
-            String[] tags = input.split(" ");
-            return dao.filterSearch(tags);
-        });
+//        get("/api/tags/:tag", (req) -> {
+//            String input = req.param("tag").value();
+//            String[] tags = input.split(" ");
+//            return tagsDao.filterSearch(tags);
+//        });
         
-         get("/api/partys", () -> partyDao.getPartys());
-         get("/api/partys/:party", (req) ->{
+         get("/api/parties", () -> partyDao.getPartys());
+         get("/api/parties/:party", (req) ->{
              String party = req.param("party").value();
              return partyDao.getParty(party);
          });

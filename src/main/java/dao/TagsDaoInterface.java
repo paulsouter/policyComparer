@@ -10,6 +10,7 @@ import domain.Tag;
 import java.util.Collection;
 
 /**
+ * 
  *
  * @author paulo
  */

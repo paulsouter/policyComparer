@@ -26,10 +26,10 @@
                 <th>date</th>
                 <th></th>
             </tr>
-            <tbody ng-controller="CartController as cartCtrl">
+            <tbody>
                 <tr ng-repeat="policy in polCtrl.policies">
                     <td>{{policy.name}}</td>
-                    <td>{{policy.party}}</td>
+                    <td>{{party.name}}</td>
                     <td>{{policy.text}}</td>
                     <td>{{policy.tags}}</td>
                     <td>{{policy.website}}</td>

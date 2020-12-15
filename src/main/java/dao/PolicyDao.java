@@ -65,7 +65,6 @@ public class PolicyDao implements PolicyDaoInterface {
         for(Tag tag : policy.getTags()){
             Integer tagid = tagsDao.getTagName(tag.getName()).getId();
             tagsDao.addTagsToPolicy(policy.getId(), tagid);
-            
         }
 
     }
@@ -129,7 +128,7 @@ public class PolicyDao implements PolicyDaoInterface {
 
     @Override
     public Collection<Policy> getPolicy() {//need to gt the date add to the policy.
-        String sql = "select * from policy order by policytid";
+        String sql = "select * from policy order by policyid";
 
         try (
                 // get a connection to the database
@@ -148,7 +147,7 @@ public class PolicyDao implements PolicyDaoInterface {
                 // get the data out of the query
                 Integer id = rs.getInt("policyid");
                 String name = rs.getString("policyname");
-                String text = rs.getString("text");
+                String text = rs.getString("policyText");
 //                String date = rs.getString("date");
                 Party party = partyDao.getPolicyParty(id);
                 Collection<Tag> tags = tagsDao.getPolicyTags(id);
@@ -183,7 +182,7 @@ public class PolicyDao implements PolicyDaoInterface {
             if (rs.next()) {
                 Integer policyId = rs.getInt("policyid");
                 String name = rs.getString("policyname");
-                String text = rs.getString("description");
+                String text = rs.getString("policytext");
 //                String date = rs.getString("category");
                 Party party = partyDao.getPolicyParty(id);
                 Collection<Tag> tags = tagsDao.getPolicyTags(id);

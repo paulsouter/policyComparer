@@ -35,8 +35,7 @@ public class PartyDao implements PartyDaoInterface {
         String sql = "insert into party(partyname, website) values(?, ?)";
 
         try (
-                Connection connection = JdbcConnection.getConnection(url);
-                PreparedStatement stmt = connection.prepareStatement(sql);) {
+                 Connection connection = JdbcConnection.getConnection(url);  PreparedStatement stmt = connection.prepareStatement(sql);) {
             stmt.setString(1, party.getName());
             stmt.setString(2, party.getWebsite());
             stmt.executeUpdate();
@@ -51,8 +50,7 @@ public class PartyDao implements PartyDaoInterface {
         String sql = "select * from party";
         Collection<Party> partys = new HashSet();
         try (
-                Connection connection = JdbcConnection.getConnection(url);
-                PreparedStatement stmt = connection.prepareStatement(sql);) {
+                 Connection connection = JdbcConnection.getConnection(url);  PreparedStatement stmt = connection.prepareStatement(sql);) {
             ResultSet rs = stmt.executeQuery();
 
             while (rs.next()) {
@@ -74,8 +72,7 @@ public class PartyDao implements PartyDaoInterface {
         String sql = "select * from party where partyid = (?)";
 
         try (
-                Connection connection = JdbcConnection.getConnection(sql);
-                PreparedStatement stmt = connection.prepareStatement(sql);) {
+                 Connection connection = JdbcConnection.getConnection(sql);  PreparedStatement stmt = connection.prepareStatement(sql);) {
 
             stmt.setInt(1, id);
             ResultSet rs = stmt.executeQuery();
@@ -98,26 +95,25 @@ public class PartyDao implements PartyDaoInterface {
         String sql = "select * from party where partyname =(?)";
 
         try (
-                Connection connection = JdbcConnection.getConnection(sql);
-                PreparedStatement stmt = connection.prepareStatement(sql);) {
+                 Connection connection = JdbcConnection.getConnection(sql);  PreparedStatement stmt = connection.prepareStatement(sql);) {
 
             stmt.setString(1, name);
             System.out.println("test " + stmt.toString());
             ResultSet rs = stmt.executeQuery();
-            if(rs.next()){
-            System.out.println("Hi " + rs.toString());
+            if (rs.next()) {
+                System.out.println("Hi " + rs.toString());
 
 //            System.out.println("test " + temp);
-            String website = rs.getString("website");
-            String partyName = rs.getString("partyname");
-            Integer temp = rs.getInt("partyid");
+                String website = rs.getString("website");
+                String partyName = rs.getString("partyname");
+                Integer temp = rs.getInt("partyid");
 //            BigDecimal temp = rs.getBigDecimal("partyid");
-            Integer partyId = temp.intValue();
+                Integer partyId = temp.intValue();
 
-            Party p = new Party(partyId, partyName, website);
-            System.out.println("party " + p.toString());
-            return p;
-            }else{
+                Party p = new Party(partyId, partyName, website);
+                System.out.println("party " + p.toString());
+                return p;
+            } else {
                 System.out.println("what the fuck");
                 return null;
             }
@@ -130,13 +126,17 @@ public class PartyDao implements PartyDaoInterface {
 
     @Override
     public Party getPolicyParty(Integer id) {
-        String sql = "select * from party where policyid = (?)";
+        String sql = "select * from party where partyid =(select partyid from policy where policyid = (?))";
 
         try (
-                Connection connection = JdbcConnection.getConnection(url);
-                PreparedStatement stmt = connection.prepareStatement(sql);) {
+                 Connection connection = JdbcConnection.getConnection(url);  PreparedStatement stmt = connection.prepareStatement(sql);) {
+
             stmt.setInt(1, id);
             ResultSet rs = stmt.executeQuery();
+
+            if (rs.next()) {
+
+            }
             Integer partyId = rs.getInt("partyid");
             String name = rs.getString("partyname");
             String website = rs.getString("website");

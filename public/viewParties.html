@@ -20,17 +20,16 @@ and open the template in the editor.
         <h1>Parties</h1>
         <div ng-include="'menu.html'" ></div>
         <button ng-click="partCtrl.getParties()" >All</button>
-        <!--<button ng-click="prodCtrl.selectCategory(cat)" ng-repeat="cat in prodCtrl.categories">{{cat}}</button>-->
         <table>
             <tr>
                 <th>Party name</th>
                 <th>website</th>
             </tr>
-            <tbody ng-controller="CartController as cartCtrl">
+            <tbody>
                 <tr ng-repeat="party in partCtrl.parties">
                     <td>{{party.name}}</td>
                     <td>{{party.website}}</td>
-                    <td><button ng-click="partCtro.getParty(party.id)">to to {{party.name}} </button></td>
+                    <td><button ng-click="partCtrl.getParty(party.id)">to {{party.name}} </button></td>
 
                 </tr>
             </tbody>

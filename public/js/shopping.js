@@ -10,32 +10,32 @@
 var module = angular.module('ShoppingApp', ['ngResource', 'ngStorage']);
 
 module.factory('policyDAO', function ($resource) {
-    return $resource('/api/policy/:id');
+    return $resource('/api/policies/:id');
 });
 module.factory('partyDAO', function ($resource) {
-    return $resource('/api/party/:id');
+    return $resource('/api/parties/:id');
 });
 
 
-module.controller('partyControler', function (partyDAO) {
-    this.party = partyDAO.query();
+module.controller('PartyController', function (partyDAO) {
+    this.parties = partyDAO.query();
     this.getPartys = function () {
-        this.party = partyDAO.query();
-    }
+        this.parties = partyDAO.query();
+    };
 
 });
 
 module.controller('PolicytController', function (policyDAO, tagsDAO) {
-    this.policy = policyDAO.query();
+    this.policies = policyDAO.query();
     // load the categories
     this.tags = tagsDAO.query();
     // click handler for the category filter buttons
     this.getPolicys = function () {
-        this.policy = policyDAO.query();
+        this.policys = policyDAO.query();
     };
 
     this.selectTags = function (selectedtag) {
-        this.policy = tagsDAO.query({"tag": selectedtag});
+        this.policys = tagsDAO.query({"tag": selectedtag});
 
     };
 

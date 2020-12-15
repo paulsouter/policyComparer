@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <!--
 To change this license header, choose License Headers in Project Properties.
@@ -15,12 +16,12 @@ and open the template in the editor.
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <link rel="stylesheet" href="css/StyleSheet.css">
     </head>
-    <body ng-controller="ProductController as polCtrl" >
+    <body ng-controller="PolicytController as polCtrl" >
 
         <h1>Policies</h1>
         <div ng-include="'menu.html'" ></div>
         <button ng-click="polCtrl.getPolicies()" >All</button>
-        <button ng-click="polCtrl.selecttags(tag)" ng-repeat="tag in polCtrl.tags">{{tag}}</button>
+        <button ng-click="polCtrl.selecttags(tag)" ng-repeat="tag in polCtrl.tags">{{tag.name}}</button>
         <table>
             <tr>
                 <th>name</th>
@@ -31,7 +32,7 @@ and open the template in the editor.
                 <th>date</th>
                 <th></th>
             </tr>
-            <tbody ng-controller="CartController as cartCtrl">
+            <tbody>
                 <tr ng-repeat="policy in polCtrl.policies">
                     <td>{{policy.name}}</td>
                     <td>{{policy.party}}</td>

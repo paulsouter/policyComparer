@@ -5,6 +5,8 @@
  */
 package domain;
 
+import java.util.Collection;
+
 /**
  *
  * @author paulo
@@ -12,9 +14,22 @@ package domain;
 public class Tag {
     private String name;
     private Integer id;
+    private Collection<Policy> policys;
 
+    public Tag(String name, Collection<Policy> policys){
+        this.name = name;
+        this.policys = policys;
+    }
     public Tag(String name){
         this.name = name;
+    }
+
+    public Collection<Policy> getPolicys() {
+        return policys;
+    }
+
+    public void setPolicys(Collection<Policy> policys) {
+        this.policys = policys;
     }
     @Override
     public String toString() {

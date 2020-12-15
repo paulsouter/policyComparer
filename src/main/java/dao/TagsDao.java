@@ -32,7 +32,7 @@ public class TagsDao implements TagsDaoInterface {
 
     @Override
     public void addTags(Collection<Tag> tags) {
-        String sql = "merge into Tags(tagname) values(?)";
+        String sql = "insert into Tags(tagname) values(?)";
 
         try (
                 // get connection to database
@@ -43,7 +43,7 @@ public class TagsDao implements TagsDaoInterface {
                 if(inDatabase(tag)){
                     continue;
                 }
-                stmt.setString(0, tag.getName());
+                stmt.setString(1, tag.getName());
                 stmt.executeUpdate();
             }
 
@@ -53,8 +53,8 @@ public class TagsDao implements TagsDaoInterface {
     }
 
     @Override
-    public void addTagsToPolicy(Integer tagId, Integer policyId) {
-             String sql = "merge into policytag(policyid, tagid) values(?, ?)";
+    public void addTagsToPolicy(Integer policyId, Integer tagId) {
+             String sql = "merge into policytag(policynum, tagsnum) values(?, ?)";
 
         try (
                 // get connection to database
@@ -62,8 +62,8 @@ public class TagsDao implements TagsDaoInterface {
                 // create the statement
                 PreparedStatement stmt = dbCon.prepareStatement(sql);) {
                 
-                stmt.setInt(0, policyId);
-                stmt.setInt(1, tagId);
+                stmt.setInt(1, policyId);
+                stmt.setInt(2, tagId);
                 stmt.executeUpdate();
             
 
@@ -75,16 +75,16 @@ public class TagsDao implements TagsDaoInterface {
 
     @Override
     public Tag getTagId(Integer id) {
-        String sql = "select * from tags where tagid = (?)";
+        String sql = "select * from tags where tagsid = (?)";
 
         try (
                 Connection dbCon = JdbcConnection.getConnection(url);
                 PreparedStatement stmt = dbCon.prepareStatement(sql);) {
 
-            stmt.setInt(0, id);
+            stmt.setInt(1, id);
             ResultSet rs = stmt.executeQuery();
             if (rs.next()) {
-                int tagId = rs.getInt("tagid");
+                int tagId = rs.getInt("tagsid");
                 String name = rs.getString("tagname");
                 Tag t = new Tag(tagId, name);
                 return t;
@@ -105,10 +105,10 @@ public class TagsDao implements TagsDaoInterface {
                 Connection dbCon = JdbcConnection.getConnection(url);
                 PreparedStatement stmt = dbCon.prepareStatement(sql);) {
 
-            stmt.setString(0, name);
+            stmt.setString(1, name);
             ResultSet rs = stmt.executeQuery();
             if (rs.next()) {
-                int tagId = rs.getInt("tagid");
+                int tagId = rs.getInt("tagsid");
                 String tagName = rs.getString("tagname");
                 Tag t = new Tag(tagId, tagName);
                 return t;
@@ -123,7 +123,7 @@ public class TagsDao implements TagsDaoInterface {
     
     @Override
     public Collection<Tag> getTags() {
-        String sql = "select distinct tagname from tags";
+        String sql = "select * from tags";
 
         try (
                 // get connection to database
@@ -135,8 +135,9 @@ public class TagsDao implements TagsDaoInterface {
 
             Collection<Tag> cat = new HashSet();
             while (rs.next()) {
-                Integer id = rs.getInt("tagid");
-                cat.add(getTagId(id));
+                Integer id = rs.getInt("tagsid");
+                String name = rs.getString("tagname");
+                cat.add( new Tag(id, name));
 
             }
             return cat;
@@ -176,21 +177,21 @@ public class TagsDao implements TagsDaoInterface {
     }
 
     @Override
-    public Collection<Tag> getPolicyTags(Integer policyId) {
-        String sql = "select distinct tagid from tags where tagsid = "
-                + "(select tagsnum from policytag where policynum = (?)";
-        try (
+    public Collection<Tag> getPolicyTags(Integer policyId) {//should do a full join so not to do a second call
+        String sql = "select distinct tagsnum from policytag where policynum = (?)";
+         try (
                 // get connection to database
-                Connection connection = JdbcConnection.getConnection(url);
+                Connection dbCon = JdbcConnection.getConnection(url);
                 // create the statement
-                PreparedStatement stmt = connection.prepareStatement(sql);) {
+                PreparedStatement stmt = dbCon.prepareStatement(sql);) {
+             System.out.println("test "+ policyId);
             stmt.setInt(1, policyId);
             // execute the query
             ResultSet rs = stmt.executeQuery();
 
             Collection<Tag> cat = new HashSet();
             while (rs.next()) {
-                Integer id = rs.getInt("tagid");
+                Integer id = rs.getInt("tagsnum");
                 cat.add(getTagId(id));
 
             }
@@ -203,6 +204,8 @@ public class TagsDao implements TagsDaoInterface {
     
     @Override
     public boolean inDatabase(Tag tag) {
+        String name = tag.getName();
+        Tag temp = getTagName(name);
         if (getTagName(tag.getName()) != null) {
             return true;
         } else {

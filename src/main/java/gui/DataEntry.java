@@ -216,12 +216,12 @@ public class DataEntry extends javax.swing.JDialog {
             Date date = new Date();
             Policy policy = new Policy(id, name, policyText, party, tags, date);
             System.out.println(policy.toString());
-            if (id != null && policyId.isEditable()) {
-                if (dao.inDatabase(id)) {
-                    JOptionPane.showMessageDialog(this, "Item is in the database already");
-                    return;
-                }
-            }
+//            if (id != null && policyId.isEditable()) {
+//                if (dao.inDatabase(id)) {
+//                    JOptionPane.showMessageDialog(this, "Item is in the database already");
+//                    return;
+//                }
+//            }
             if (validation.isObjectValid(policy)) {
 
                 dao.addPolicy(policy);
