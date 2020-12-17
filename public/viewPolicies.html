@@ -26,7 +26,6 @@ and open the template in the editor.
             <tr>
                 <th>name</th>
                 <th>party</th>
-                <th>policy:</th>
                 <th>tags</th>
                 <th>website</th>
                 <th>date</th>
@@ -35,12 +34,11 @@ and open the template in the editor.
             <tbody>
                 <tr ng-repeat="policy in polCtrl.policies">
                     <td>{{policy.name}}</td>
-                    <td>{{policy.party}}</td>
-                    <td>{{policy.text}}</td>
-                    <td>{{policy.tags}}</td>
+                    <td>{{policy.party.name}}</td>
+                    <td><var ng-repeat="tag in policy.tags">{{tag.name}} </var></td>
                     <td>{{policy.website}}</td>
                     <td>{{policy.date}}</td>
-                    <!--<td><button ng-click="cartCtrl.storeProduct(product)">Buy</button></td>-->
+                    <td><button ng-click="polCtrl.seePolicy(policy)">see full policy</button></td>
 
                 </tr>
             </tbody>

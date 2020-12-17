@@ -11,34 +11,17 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <link rel="stylesheet" href="css/StyleSheet.css">
     </head>
-    <body ng-controller="PolicyController as polCtrl" >
+    <body ng-controller="PolicytController as polCtrl" >
 
         <h1>Policy</h1>
         <div ng-include="'menu.html'" ></div>
-        <button ng-click="prolCtrl.selectTags(tag)" ng-repeat="tag in polCtrl.tags">{{tag}}</button>
-        <table>
-            <tr>
-                <th>name</th>
-                <th>party</th>
-                <th>policy:</th>
-                <th>tags</th>
-                <th>website</th>
-                <th>date</th>
-                <th></th>
-            </tr>
-            <tbody>
-                <tr ng-repeat="policy in polCtrl.policies">
-                    <td>{{policy.name}}</td>
-                    <td>{{party.name}}</td>
-                    <td>{{policy.text}}</td>
-                    <td>{{policy.tags}}</td>
-                    <td>{{policy.website}}</td>
-                    <td>{{policy.date}}</td>
-                    <!--<td><button ng-click="cartCtrl.storeProduct(product)">Buy</button></td>-->
+        <p>name :{{polCtrl.getPolicy().name}}<br>
+            party :{{polCtrl.getPolicy().party.name}}<br>
+            policy details :{{polCtrl.getPolicy().text}}<br>
+            tags :<var ng-repeat="tag in polCtrl.getPolicy().tags">{{tag.name}} </var><br>
+            website <br>
+            date :{{polCtrl.getPolicy().date}}</p>
 
-                </tr>
-            </tbody>
-        </table>
 
     </body>
 </html>
