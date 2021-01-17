@@ -9,6 +9,8 @@ import dao.PartyDaoInterface;
 import org.jooby.Jooby;
 import dao.PolicyDaoInterface;
 import dao.TagsDaoInterface;
+import domain.Policy;
+import java.util.Collection;
 
 /**
  *
@@ -23,16 +25,16 @@ public class ProductModule extends Jooby {
             return dao.searchId(id);
         });
         get("/api/tags", () -> tagsDao.getTags());
-//        get("/api/tags/:tag", (req) -> {
-//            String input = req.param("tag").value();
-//            String[] tags = input.split(" ");
-//            return tagsDao.filterSearch(tags);
-//        });
-        
-         get("/api/parties", () -> partyDao.getPartys());
-         get("/api/parties/:party", (req) ->{
-             String party = req.param("party").value();
-             return partyDao.getParty(party);
-         });
+        get("/api/tags/:tag", (req) -> {
+            int id = req.param("tag").intValue();
+            Collection<Policy> results = tagsDao.getTagPolicys(id);
+            return results;
+        });
+
+        get("/api/parties", () -> partyDao.getPartys());
+        get("/api/parties/:party", (req) -> {
+            String party = req.param("party").value();
+            return partyDao.getParty(party);
+        });
     }
 }

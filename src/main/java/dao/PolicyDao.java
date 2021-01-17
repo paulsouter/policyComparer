@@ -28,11 +28,10 @@ public class PolicyDao implements PolicyDaoInterface {
 
 //    private String url = "jdbc:h2:tcp://localhost:9004/project;IFEXISTS=TRUE";
     private String url = "jdbc:h2:tcp://localhost:9092/~/policy;IFEXISTS=TRUE";
-    private PartyDao partyDao = new PartyDao();
-    private TagsDaoInterface tagsDao = new TagsDao();
+    private final PartyDao partyDao = new PartyDao();
+    private final TagsDaoInterface tagsDao = new TagsDao();
 
     public PolicyDao() {
-
     }
 
     public PolicyDao(String url) {

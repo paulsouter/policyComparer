@@ -152,8 +152,7 @@ public class TagsDao implements TagsDaoInterface {
     public Collection<Policy> getTagPolicys(Integer id){//should get everything in on go not in multiple queres
         
         policyDao = new PolicyDao();
-         String sql = "select distinct policyid from policy where policyid = "
-                + "(select policynum from policytag where tagnum = (?)";
+         String sql = "select policynum from policytag where tagsnum = (?)";
         try (
                 // get connection to database
                 Connection connection = JdbcConnection.getConnection(url);
@@ -165,7 +164,7 @@ public class TagsDao implements TagsDaoInterface {
 
             Collection<Policy> cat = new HashSet();
             while (rs.next()) {
-                int policyId = rs.getInt("policyid");
+                int policyId = rs.getInt("policynum");
                 cat.add(policyDao.searchId(policyId));
 
             }

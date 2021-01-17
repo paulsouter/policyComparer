@@ -28,8 +28,8 @@ and open the template in the editor.
             <tbody>
                 <tr ng-repeat="party in partCtrl.parties">
                     <td>{{party.name}}</td>
-                    <td>{{party.website}}</td>
-                    <td><button ng-click="partCtrl.getParty(party)">to {{party.name}} </button></td>
+                    <td><a href={{party.website}}>{{party.website}}</a></td>
+                    <!--<td><button ng-click="partCtrl.getParty({{party.website}})">to {{party.name}} </button></td>-->
 
                 </tr>
             </tbody>

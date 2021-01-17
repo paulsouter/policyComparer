@@ -21,7 +21,7 @@ and open the template in the editor.
         <h1>Policies</h1>
         <div ng-include="'menu.html'" ></div>
         <button ng-click="polCtrl.getPolicies()" >All</button>
-        <button ng-click="polCtrl.selecttags(tag)" ng-repeat="tag in polCtrl.tags">{{tag.name}}</button>
+        <button ng-click="polCtrl.selectTags(tag)" ng-repeat="tag in polCtrl.tags">{{tag.name}}</button>
         <table>
             <tr>
                 <th>name</th>

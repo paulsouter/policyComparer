@@ -22,12 +22,12 @@ module.controller('PartyController', function (partyDAO) {
     this.getPartys = function () {
         this.parties = partyDAO.query();
     };
-      this.seeParty= function (party) {
-        $sessionStorage.party = party;
-        $window.location.href = './partyview.html';
-        this.selectedParty = $sessionStorage.party;
+    this.seeParty = function (party) {
+//        $sessionStorage.party = party;
+        $window.location.href = party;
+//        this.selectedParty = $sessionStorage.party;
     };
-    this.getParty= function(){
+    this.getParty = function () {
         return this.selectedParty
     };
 
@@ -39,13 +39,13 @@ module.controller('PolicytController', function (policyDAO, tagsDAO, $sessionSto
     // load the categories
     this.tags = tagsDAO.query();
     // click handler for the category filter buttons
-    this.selectedPolicy= $sessionStorage.policy;
-    this.getPolicys = function () {
-        this.policys = policyDAO.query();
+    this.selectedPolicy = $sessionStorage.policy;
+    this.getPolicies = function () {
+        this.policies = policyDAO.query();
     };
 
     this.selectTags = function (selectedtag) {
-        this.policys = tagsDAO.query({"tag": selectedtag});
+        this.policies = tagsDAO.query({"tag": selectedtag.id});
 
     };
     this.seePolicy = function (policy) {
@@ -53,7 +53,7 @@ module.controller('PolicytController', function (policyDAO, tagsDAO, $sessionSto
         $window.location.href = './policyView.html';
         this.selectedPolicy = $sessionStorage.policy;
     };
-    this.getPolicy = function(){
+    this.getPolicy = function () {
         return this.selectedPolicy;
     };
 
